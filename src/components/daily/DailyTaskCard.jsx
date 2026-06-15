@@ -1,10 +1,29 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Confetti from 'react-confetti'
 import { Check, Clock, Trash2, GripVertical } from 'lucide-react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cn } from '../../lib/cn'
+
+// Inline confetti to avoid react-confetti ESM/CJS mismatch (React Error #130)
+const CONFETTI_COLORS = ['#3E71C0', '#5A8FD4', '#FFD45C', '#7CFF8A', '#FF8C5C', '#A56CFF']
+function InlineConfetti({ show }) {
+  if (!show) return null
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden z-50">
+      {CONFETTI_COLORS.map((color, i) => (
+        <motion.span
+          key={i}
+          initial={{ y: -10, opacity: 0, x: `${15 + i * 13}%`, rotate: 0, scale: 0.8 }}
+          animate={{ y: 60, opacity: [0, 1, 1, 0], rotate: 360, scale: [0.8, 1, 0.8] }}
+          transition={{ duration: 1.8, delay: i * 0.08, ease: 'easeOut' }}
+          style={{ backgroundColor: color, position: 'absolute', top: 0 }}
+          className="w-2 h-2 rounded-sm"
+        />
+      ))}
+    </div>
+  )
+}
 
 function TaskCheckbox({ checked, onChange }) {
   return (
@@ -37,7 +56,6 @@ function TaskCheckbox({ checked, onChange }) {
 
 export function DailyTaskCard({ task, onToggle, onDelete, sortable = false }) {
   const [showConfetti, setShowConfetti] = useState(false)
-  const [cardRef, setCardRef] = useState(null)
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task.id,
@@ -59,33 +77,10 @@ export function DailyTaskCard({ task, onToggle, onDelete, sortable = false }) {
       }
     : undefined
 
-  const refCallback = (node) => {
-    setCardRef(node)
-    if (setNodeRef) setNodeRef(node)
-  }
-
   return (
     <>
-      {showConfetti && cardRef && (
-        <Confetti
-          width={cardRef.offsetWidth}
-          height={cardRef.offsetHeight}
-          recycle={false}
-          numberOfPieces={40}
-          confettiSource={{
-            x: cardRef.offsetWidth / 2,
-            y: cardRef.offsetHeight / 2,
-            w: 0,
-            h: 0,
-          }}
-          colors={['#3E71C0', '#5A8FD4', '#D9D9D9', '#C6C8CC']}
-          gravity={0.3}
-          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 50 }}
-        />
-      )}
-
       <motion.div
-        ref={refCallback}
+        ref={setNodeRef}
         style={style}
         layout
         initial={{ opacity: 0, y: 10 }}
@@ -102,6 +97,8 @@ export function DailyTaskCard({ task, onToggle, onDelete, sortable = false }) {
           isDragging && 'shadow-glow z-10'
         )}
       >
+        <InlineConfetti show={showConfetti} />
+
         {sortable && (
           <button
             type="button"
