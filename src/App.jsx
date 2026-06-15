@@ -47,6 +47,22 @@ function PageWrapper({ children }) {
   )
 }
 
+// Scrolls to the hash element after route/page transitions settle
+function ScrollToHash() {
+  const location = useLocation()
+  useEffect(() => {
+    if (!location.hash) return
+    const id = location.hash.slice(1)
+    const el = document.getElementById(id)
+    if (el) {
+      // Small delay lets page-transition animation finish first
+      const t = setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300)
+      return () => clearTimeout(t)
+    }
+  }, [location.hash, location.pathname])
+  return null
+}
+
 function PublicShell({ session, children }) {
   return (
     <div className="min-h-screen flex flex-col bg-base text-primary">
@@ -63,7 +79,9 @@ function PublicShell({ session, children }) {
 
 function AppRoutes({ session }) {
   return (
-    <Routes>
+    <>
+      <ScrollToHash />
+      <Routes>
       <Route
         path="/"
         element={
@@ -156,7 +174,8 @@ function AppRoutes({ session }) {
         }
       />
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+    </>
   )
 }
 

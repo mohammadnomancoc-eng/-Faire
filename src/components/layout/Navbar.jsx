@@ -26,6 +26,17 @@ export function Navbar({ session, variant = 'floating' }) {
 
   const links = session ? authLinks : publicLinks
 
+  const handleLinkClick = (e, path) => {
+    if (!path.includes('#')) return
+    const [pathname, hash] = path.split('#')
+    const targetPath = pathname || '/'
+    if (location.pathname === targetPath) {
+      e.preventDefault()
+      const el = document.getElementById(hash)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -77,6 +88,7 @@ export function Navbar({ session, variant = 'floating' }) {
               <Link
                 key={link.path}
                 to={link.path}
+                onClick={(e) => handleLinkClick(e, link.path)}
                 className={cn(
                   'nav-link',
                   location.pathname === link.path && 'nav-link-active'
