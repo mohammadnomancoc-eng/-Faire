@@ -117,42 +117,47 @@ export function Landing() {
       <section className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-28 pb-20">
         <HeroBG />
         <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-royal/30 bg-royal/10 text-royal-light text-xs font-semibold uppercase tracking-widest mb-8"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Where Intent Becomes Action
-          </motion.div>
 
+          {/* Logo + Title inline */}
           <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="inline-block mb-6"
-          >
-            <Logo className="h-20 w-20 mx-auto" />
-          </motion.div>
-
-          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05]"
-            style={{ fontFamily: 'var(--font-display, system-ui)' }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center justify-center gap-5 sm:gap-7"
           >
-            <span className="text-white">À</span>{' '}
-            <span style={{ background: 'linear-gradient(135deg, #5A8FD4 0%, #3E71C0 50%, #7EB3FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Faire
-            </span>
-          </motion.h1>
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <Logo className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
+            </motion.div>
+
+            <h1
+              className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05]"
+              style={{ fontFamily: 'var(--font-display, system-ui)' }}
+            >
+              <span style={{ background: 'linear-gradient(135deg, #ffffff 0%, #c8dcf5 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>À-</span>
+              <span style={{ background: 'linear-gradient(135deg, #5A8FD4 0%, #3E71C0 50%, #7EB3FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                Faire
+              </span>
+            </h1>
+          </motion.div>
+
+          {/* Tagline below title */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-4 text-base sm:text-lg font-semibold uppercase tracking-[0.2em] text-royal-light"
+          >
+            Where Intent Becomes Action
+          </motion.p>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25 }}
-            className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
+            transition={{ duration: 0.8, delay: 0.35 }}
+            className="mt-5 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
           >
             Transform your goals into consistent progress through intelligent planning,
             focus tracking, and a beautifully premium productivity experience.
