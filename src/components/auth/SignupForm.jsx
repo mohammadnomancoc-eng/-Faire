@@ -7,29 +7,109 @@ export function SignupForm({ onSwitchToLogin }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false)
+  const [registeredEmail, setRegisteredEmail] = useState('')
 
   const handleSignup = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const { error } = await supabase.auth.signUp({
+    setError(null)
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { full_name: fullName } },
     })
-    if (error) {
-      alert(error.message)
+    if (signUpError) {
+      setError(signUpError.message)
     } else {
-      alert('Check your email to confirm your account, then sign in.')
+      setRegisteredEmail(email)
+      setSuccess(true)
     }
     setLoading(false)
   }
 
+  // ── Success screen ────────────────────────────────────────────────────────
+  if (success) {
+    return (
+      <div className="flex flex-col items-center text-center space-y-5 py-4">
+        {/* Animated checkmark circle */}
+        <div
+          style={{
+            width: 72,
+            height: 72,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #22c55e22 0%, #16a34a44 100%)',
+            border: '2px solid #22c55e66',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 32,
+          }}
+        >
+          ✅
+        </div>
+
+        <div>
+          <h2 className="font-display text-2xl font-bold text-white">Check your inbox!</h2>
+          <p className="text-sm text-slate mt-2 leading-relaxed">
+            A confirmation link has been sent to{' '}
+            <span className="text-royal-light font-medium">{registeredEmail}</span>.
+          </p>
+        </div>
+
+        {/* Highlighted instruction box */}
+        <div
+          style={{
+            width: '100%',
+            background: 'rgba(99,102,241,0.10)',
+            border: '1px solid rgba(99,102,241,0.30)',
+            borderRadius: 12,
+            padding: '14px 16px',
+          }}
+        >
+          <p className="text-sm text-white font-medium">
+            📧 Your email is verified — now login with the same email
+          </p>
+          <p className="text-xs text-slate mt-1">
+            Click the link in the email, then come back and sign in.
+          </p>
+        </div>
+
+        <Button
+          type="button"
+          variant="primary"
+          className="w-full"
+          onClick={onSwitchToLogin}
+        >
+          Go to Login →
+        </Button>
+      </div>
+    )
+  }
+
+  // ── Signup form ────────────────────────────────────────────────────────────
   return (
     <form onSubmit={handleSignup} className="space-y-5">
       <div>
         <h2 className="font-display text-2xl font-bold text-white">Create account</h2>
         <p className="text-sm text-slate mt-1">Start turning intent into action.</p>
       </div>
+
+      {/* Inline error message */}
+      {error && (
+        <div
+          style={{
+            background: 'rgba(239,68,68,0.12)',
+            border: '1px solid rgba(239,68,68,0.35)',
+            borderRadius: 10,
+            padding: '10px 14px',
+          }}
+        >
+          <p className="text-sm text-red-400">{error}</p>
+        </div>
+      )}
+
       <div>
         <label htmlFor="signup-name" className="block text-sm text-slate mb-2">
           Full name
