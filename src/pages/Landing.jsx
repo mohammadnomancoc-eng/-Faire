@@ -106,10 +106,7 @@ const testimonials = [
   { name: 'Aisha M.', role: 'Startup Founder', text: 'Finally a productivity app that feels premium. Worth every second of my time.' },
 ]
 
-const plans = [
-  { name: 'Free', price: '0', period: 'forever', features: ['Daily task planner', '3 active goals', 'Progress rings', 'Mobile-ready'], cta: 'Get Started', highlight: false },
-  { name: 'Pro', price: '7', period: 'month', features: ['Unlimited goals', 'Smart reminders', 'Calendar heatmap', 'Priority support', 'Export data'], cta: 'Start Free Trial', highlight: true },
-]
+
 
 /* ─── Main Component ───────────────────────────────────────────── */
 export function Landing() {
@@ -360,59 +357,6 @@ export function Landing() {
         </div>
       </section>
 
-      {/* ── PRICING ── */}
-      <section className="py-28 px-4 border-t border-white/[0.06]">
-        <div className="max-w-4xl mx-auto">
-          <Reveal className="text-center mb-14">
-            <p className="text-royal-light text-xs font-bold uppercase tracking-[0.25em] mb-4">Pricing</p>
-            <h2 className="text-4xl font-bold">Simple, honest pricing</h2>
-            <p className="text-slate-400 mt-3">No hidden fees. Cancel anytime.</p>
-          </Reveal>
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {plans.map((plan, i) => (
-              <Reveal key={plan.name} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className={`relative p-8 rounded-2xl border h-full flex flex-col ${plan.highlight ? 'border-royal/50' : 'border-white/[0.08]'}`}
-                  style={{ background: plan.highlight ? 'rgba(62,113,192,0.12)' : 'rgba(255,255,255,0.03)' }}
-                >
-                  {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold text-white"
-                      style={{ background: 'linear-gradient(135deg,#3E71C0,#5A8FD4)' }}>
-                      Most Popular
-                    </div>
-                  )}
-                  <p className="text-white font-bold text-xl mb-1">{plan.name}</p>
-                  <div className="flex items-end gap-1 mb-6">
-                    <span className="text-5xl font-bold text-white">${plan.price}</span>
-                    <span className="text-slate-400 text-sm mb-2">/{plan.period}</span>
-                  </div>
-                  <ul className="space-y-3 flex-1 mb-8">
-                    {plan.features.map(f => (
-                      <li key={f} className="flex items-center gap-2 text-sm text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-royal-light shrink-0" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/login">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors ${plan.highlight
-                        ? 'text-white'
-                        : 'border border-white/15 text-white hover:bg-white/5'}`}
-                      style={plan.highlight ? { background: 'linear-gradient(135deg,#3E71C0,#2a5499)' } : {}}
-                    >
-                      {plan.cta}
-                    </motion.button>
-                  </Link>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── CTA ── */}
       <section className="py-28 px-4 border-t border-white/[0.06] relative overflow-hidden">
