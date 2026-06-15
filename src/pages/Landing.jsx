@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import { motion, useMotionValue, useTransform, useInView } from 'framer-motion'
 import {
   Sparkles, Target, Calendar, TrendingUp, Zap, Shield,
-  ArrowRight, CheckCircle2, Star, Users, BarChart3, Clock,
+  ArrowRight, CheckCircle2, Star, Users, Clock,
   ChevronDown,
 } from 'lucide-react'
+
 import { Logo } from '../components/layout/Logo'
 import { Button } from '../components/ui/Button'
 import { GlassCard } from '../components/ui/GlassCard'
@@ -97,8 +98,8 @@ const stats = [
   { value: 12, suffix: 'k+', label: 'Tasks Completed', icon: CheckCircle2 },
   { value: 98, suffix: '%', label: 'Satisfaction Rate', icon: Star },
   { value: 3, suffix: 'k+', label: 'Active Users', icon: Users },
-  { value: 50, suffix: '+', label: 'Features', icon: BarChart3 },
 ]
+
 
 const testimonials = [
   { name: 'Sarah K.', role: 'Product Designer', text: 'À Faire completely changed how I approach my days. The goal tracking is unmatched.' },

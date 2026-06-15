@@ -50,9 +50,9 @@ const footerLinks = {
 }
 
 const socials = [
-  { icon: InstagramIcon, href: 'https://instagram.com/YOUR_HANDLE', label: 'Instagram' },
-  { icon: GitHubIcon, href: 'https://github.com/YOUR_HANDLE', label: 'GitHub' },
-  { icon: LinkedInIcon, href: 'https://linkedin.com/in/YOUR_HANDLE', label: 'LinkedIn' },
+  { icon: InstagramIcon, href: 'https://www.instagram.com/_noman_khan_23_/', label: 'Instagram' },
+  { icon: GitHubIcon, href: 'https://github.com/mohammadnomancoc-eng', label: 'GitHub' },
+  { icon: LinkedInIcon, href: 'https://www.linkedin.com/in/mohammad-noman-23b0a4324', label: 'LinkedIn' },
 ]
 
 export function Footer() {
