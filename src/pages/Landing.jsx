@@ -245,7 +245,7 @@ export function Landing() {
 
       {/* ── STATS ── */}
       <section className="py-20 border-y border-white/[0.06]" style={{ background: 'rgba(62,113,192,0.04)' }}>
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="max-w-3xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-10">
           {stats.map(({ value, suffix, label, icon: Icon }, i) => (
             <Reveal key={label} delay={i * 0.1} className="text-center">
               <Icon className="w-6 h-6 text-royal-light mx-auto mb-3" />
