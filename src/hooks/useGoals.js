@@ -57,18 +57,21 @@ export function useGoals(userId) {
     setLandmarks((prev) => prev.filter((l) => l.goal_id !== goalId))
   }
 
-  const addGoalTask = async (task) => {
+  const addGoalTask = async (taskOrTasks) => {
+    // Support both single object and array of objects
+    const items = Array.isArray(taskOrTasks) ? taskOrTasks : [taskOrTasks]
+    const payload = items.map((t) => ({ ...t, user_id: userId }))
+
     const { data, error } = await supabase
       .from('goal_tasks')
-      .insert({ ...task, user_id: userId })
+      .insert(payload)
       .select()
-      .single()
 
     if (error) {
       alert(error.message)
       return null
     }
-    setGoalTasks((prev) => [...prev, data])
+    setGoalTasks((prev) => [...prev, ...(Array.isArray(data) ? data : [data])])
     return data
   }
 

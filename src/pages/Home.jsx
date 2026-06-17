@@ -10,6 +10,7 @@ import { GlassCard } from '../components/ui/GlassCard'
 import { useDailyTasks } from '../hooks/useDailyTasks'
 import { useGoals } from '../hooks/useGoals'
 import { ProgressCircle } from '../components/shared/ProgressCircle'
+import { ThemeToggle } from '../components/ui/ThemeToggle'
 
 export function Home({ session }) {
   const today = format(new Date(), 'yyyy-MM-dd')
@@ -31,14 +32,22 @@ export function Home({ session }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="flex items-start justify-between gap-4"
       >
-        <p className="text-slate text-sm mb-1">{format(new Date(), 'EEEE, MMMM d')}</p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-white">
-          {greeting()},{' '}
-          <span className="gradient-text">
-            {session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'there'}
-          </span>
-        </h1>
+        <div>
+          <p className="text-slate text-sm mb-1">{format(new Date(), 'EEEE, MMMM d')}</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-white">
+            {greeting()},{' '}
+            <span className="gradient-text">
+              {session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'there'}
+            </span>
+          </h1>
+        </div>
+
+        {/* Theme toggle — visible on desktop (hidden on mobile since it's in MobileNav) */}
+        <div className="hidden lg:flex items-center gap-2 shrink-0 pt-1">
+          <ThemeToggle />
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5">

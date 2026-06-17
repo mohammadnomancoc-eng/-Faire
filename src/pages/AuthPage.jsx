@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LoginForm } from '../components/auth/LoginForm'
 import { SignupForm } from '../components/auth/SignupForm'
@@ -27,10 +28,10 @@ export function AuthPage() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="relative glass-strong rounded-3xl w-full max-w-md p-8 shadow-glow-lg border border-white/[0.1]"
       >
-        <div className="flex flex-col items-center mb-8">
-          <Logo className="h-14 w-14 mb-4" />
+        <Link to="/" className="flex flex-col items-center mb-8 group cursor-pointer">
+          <Logo className="h-14 w-14 mb-4 transition-transform duration-300 group-hover:scale-110" />
           <Wordmark className="items-center text-center" />
-        </div>
+        </Link>
         <AnimatePresence mode="wait">
           <motion.div
             key={mode}

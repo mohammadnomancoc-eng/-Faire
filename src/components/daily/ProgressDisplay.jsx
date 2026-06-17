@@ -28,8 +28,8 @@ export function ProgressDisplay({ percentage, viewMode, setViewMode, label, comp
     return () => window.clearTimeout(timer)
   }, [percentage])
 
-  return (
-    <div className={cn(!compact && 'mb-6')}>
+    return (
+    <div className={cn(!compact && 'mb-6', 'relative')}>
       {label && (
         <p className="text-sm font-medium text-slate mb-3">{label}</p>
       )}
@@ -59,20 +59,39 @@ export function ProgressDisplay({ percentage, viewMode, setViewMode, label, comp
           Bar
         </button>
       </div>
+
+      {/* Celebration banner — sits above the visualization */}
+      <AnimatePresence>
+        {showCelebration && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.9 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="flex justify-center mb-4"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full bg-success/15 border border-success/25 px-5 py-2 text-sm font-semibold text-success shadow-lg backdrop-blur-sm">
+              🎉 Goal complete!
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="relative flex justify-center">
+        {/* Confetti — falls over the whole area but behind the badge */}
         <AnimatePresence>
           {showCelebration && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="pointer-events-none absolute inset-0 overflow-hidden"
+              className="pointer-events-none absolute -top-8 left-0 right-0 bottom-0 overflow-hidden z-0"
             >
               {celebrationItems.map((item, index) => (
                 <motion.span
                   key={item.left}
-                  initial={{ y: -120, opacity: 0, scale: 0.8 }}
-                  animate={{ y: 250, opacity: [0, 1, 1, 0], scale: [0.8, 1, 1, 0.8], rotate: 360 }}
+                  initial={{ y: -60, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 280, opacity: [0, 1, 1, 0], scale: [0.8, 1, 1, 0.8], rotate: 360 }}
                   exit={{ opacity: 0 }}
                   transition={{
                     duration: 4.8,
@@ -86,24 +105,20 @@ export function ProgressDisplay({ percentage, viewMode, setViewMode, label, comp
                   className="absolute top-0 h-3 w-10 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.18)]"
                 />
               ))}
-              <motion.div
-                initial={{ y: -60, opacity: 0, scale: 0.9 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="absolute inset-x-0 top-6 mx-auto w-max rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-xl backdrop-blur"
-              >
-                Goal complete! 🎉
-              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-        {viewMode === 'circle' ? (
-          <ProgressCircle percentage={percentage} />
-        ) : (
-          <div className="w-full max-w-md self-center">
-            <ProgressBar percentage={percentage} />
-          </div>
-        )}
+
+        {/* Progress visualization */}
+        <div className="relative z-10">
+          {viewMode === 'circle' ? (
+            <ProgressCircle percentage={percentage} />
+          ) : (
+            <div className="w-full max-w-md self-center">
+              <ProgressBar percentage={percentage} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

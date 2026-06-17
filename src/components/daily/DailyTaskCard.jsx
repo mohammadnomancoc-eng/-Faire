@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Clock, Trash2, GripVertical } from 'lucide-react'
+import { Check, Clock, Bell, Trash2, GripVertical } from 'lucide-react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { cn } from '../../lib/cn'
@@ -23,6 +23,15 @@ function InlineConfetti({ show }) {
       ))}
     </div>
   )
+}
+
+// Format "14:30:00" or "14:30" to "2:30 PM"
+function formatTime12(timeStr) {
+  if (!timeStr) return ''
+  const [h, m] = timeStr.split(':').map(Number)
+  const ampm = h >= 12 ? 'PM' : 'AM'
+  const hour12 = h % 12 || 12
+  return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`
 }
 
 function TaskCheckbox({ checked, onChange }) {
@@ -77,6 +86,9 @@ export function DailyTaskCard({ task, onToggle, onDelete, sortable = false }) {
       }
     : undefined
 
+  const hasTimeRange = task.start_time || task.end_time
+  const hasReminder = task.reminder_time
+
   return (
     <>
       <motion.div
@@ -126,11 +138,25 @@ export function DailyTaskCard({ task, onToggle, onDelete, sortable = false }) {
           {task.description && (
             <p className="text-sm text-slate mt-1 line-clamp-2">{task.description}</p>
           )}
-          {task.reminder_time && (
-            <p className="text-xs text-royal-light/80 mt-2 flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              Reminder at {task.reminder_time.slice(0, 5)}
-            </p>
+
+          {/* Time metadata row */}
+          {(hasTimeRange || hasReminder) && (
+            <div className="flex flex-wrap items-center gap-3 mt-2">
+              {hasTimeRange && (
+                <span className="inline-flex items-center gap-1.5 text-xs text-royal-light/80 bg-royal/8 px-2.5 py-1 rounded-lg">
+                  <Clock className="w-3 h-3" />
+                  {task.start_time && formatTime12(task.start_time)}
+                  {task.start_time && task.end_time && ' → '}
+                  {task.end_time && formatTime12(task.end_time)}
+                </span>
+              )}
+              {hasReminder && (
+                <span className="inline-flex items-center gap-1.5 text-xs text-amber-400/80 bg-amber-400/8 px-2.5 py-1 rounded-lg">
+                  <Bell className="w-3 h-3" />
+                  {formatTime12(task.reminder_time)}
+                </span>
+              )}
+            </div>
           )}
         </div>
 

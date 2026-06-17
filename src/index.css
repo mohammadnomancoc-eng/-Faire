@@ -90,7 +90,9 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .light body {
@@ -119,10 +121,15 @@ body {
   }
 
   .glass-card-hover {
-    @apply rounded-2xl transition-all duration-300;
+    @apply rounded-2xl;
     background: var(--glass-background);
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow);
+    transition:
+      background 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
   }
 
   .glass-card-hover:hover {

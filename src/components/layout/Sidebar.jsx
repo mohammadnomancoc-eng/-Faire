@@ -8,9 +8,12 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from 'lucide-react'
 import { cn } from '../../lib/cn'
 import { Logo, Wordmark } from './Logo'
+import { ThemeToggle } from '../ui/ThemeToggle'
+import { supabase } from '../../lib/supabaseClient'
 
 const navItems = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -87,14 +90,46 @@ export function Sidebar({ collapsed, onToggle }) {
         })}
       </nav>
 
-      <button
-        type="button"
-        onClick={onToggle}
-        className="m-3 p-2.5 rounded-xl text-secondary hover:text-primary hover:bg-page-accent transition-colors flex items-center justify-center"
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      {/* Sign out */}
+      <div className="px-3 pt-2">
+        <button
+          id="sidebar-logout"
+          type="button"
+          onClick={() => supabase.auth.signOut()}
+          className={cn(
+            'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group',
+            'text-slate hover:text-danger hover:bg-danger/10',
+            collapsed && 'justify-center px-2'
+          )}
+          title={collapsed ? 'Sign out' : undefined}
+        >
+          <LogOut className="w-5 h-5 shrink-0 transition-colors group-hover:text-danger" />
+          {!collapsed && (
+            <span className="text-sm font-medium">Sign out</span>
+          )}
+        </button>
+      </div>
+
+      {/* Theme toggle + collapse button */}
+      <div
+        className={cn(
+          'p-3 border-t border-white/[0.06] flex gap-2',
+          collapsed ? 'flex-col items-center' : 'items-center justify-between'
+        )}
       >
-        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-      </button>
+        <ThemeToggle compact className="shrink-0" />
+        {!collapsed && (
+          <span className="text-xs text-secondary font-medium select-none">Theme</span>
+        )}
+        <button
+          type="button"
+          onClick={onToggle}
+          className="p-2.5 rounded-xl text-secondary hover:text-primary hover:bg-page-accent transition-colors flex items-center justify-center"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        </button>
+      </div>
     </aside>
   )
 }
@@ -134,6 +169,18 @@ export function MobileNav() {
             </Link>
           )
         })}
+        {/* Theme toggle in mobile nav */}
+        <ThemeToggle compact />
+        {/* Logout in mobile nav */}
+        <button
+          id="mobile-logout"
+          type="button"
+          onClick={() => supabase.auth.signOut()}
+          className="flex flex-col items-center gap-1 px-4 py-2 rounded-xl text-slate hover:text-danger transition-all duration-300"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Logout</span>
+        </button>
       </div>
     </nav>
   )
