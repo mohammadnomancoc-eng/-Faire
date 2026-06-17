@@ -110,7 +110,7 @@ const testimonials = [
 
 
 /* ─── Main Component ───────────────────────────────────────────── */
-export function Landing() {
+export function Landing({ onStartGuest }) {
   return (
     <div className="relative bg-[#050c1a] text-white overflow-x-hidden">
 
@@ -180,11 +180,19 @@ export function Landing() {
                 Get Started Free <ArrowRight className="w-4 h-4" />
               </motion.button>
             </Link>
+            <motion.button
+              whileHover={{ scale: 1.04, boxShadow: '0 0 40px rgba(255,255,255,0.1)' }}
+              whileTap={{ scale: 0.97 }}
+              onClick={onStartGuest}
+              className="flex items-center gap-2 px-8 py-3.5 rounded-2xl font-semibold text-slate-300 text-sm border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+            >
+              Try without Login
+            </motion.button>
             <a href="#features">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex items-center gap-2 px-8 py-3.5 rounded-2xl font-semibold text-slate-300 text-sm border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                className="flex items-center gap-2 px-8 py-3.5 rounded-2xl font-semibold text-slate-400 text-sm hover:text-slate-300 transition-colors"
               >
                 See Features <ChevronDown className="w-4 h-4" />
               </motion.button>

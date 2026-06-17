@@ -77,7 +77,7 @@ function PublicShell({ session, children }) {
   )
 }
 
-function AppRoutes({ session }) {
+function AppRoutes({ session, onStartGuest }) {
   return (
     <>
       <ScrollToHash />
@@ -89,7 +89,7 @@ function AppRoutes({ session }) {
             <Navigate to="/dashboard" replace />
           ) : (
             <PublicShell session={session}>
-              <Landing />
+              <Landing onStartGuest={onStartGuest} />
             </PublicShell>
           )
         }
@@ -105,13 +105,13 @@ function AppRoutes({ session }) {
       <Route
         path="/login"
         element={
-          session ? (
+          session && !session.isGuest ? (
             <Navigate to="/dashboard" replace />
           ) : (
             <div className="min-h-screen bg-base relative overflow-hidden text-primary">
               <div className="fixed inset-0 bg-gradient-mesh pointer-events-none" />
               <PageWrapper>
-                <AuthPage />
+                <AuthPage onStartGuest={onStartGuest} />
               </PageWrapper>
             </div>
           )
@@ -122,7 +122,7 @@ function AppRoutes({ session }) {
         element={
           session ? (
             <PageWrapper>
-              <DashboardLayout>
+              <DashboardLayout session={session}>
                 <Home session={session} />
               </DashboardLayout>
             </PageWrapper>
@@ -136,7 +136,7 @@ function AppRoutes({ session }) {
         element={
           session ? (
             <PageWrapper>
-              <DashboardLayout>
+              <DashboardLayout session={session}>
                 <DailyPlanner session={session} />
               </DashboardLayout>
             </PageWrapper>
@@ -150,7 +150,7 @@ function AppRoutes({ session }) {
         element={
           session ? (
             <PageWrapper>
-              <DashboardLayout>
+              <DashboardLayout session={session}>
                 <MonthPlanner session={session} />
               </DashboardLayout>
             </PageWrapper>
@@ -164,7 +164,7 @@ function AppRoutes({ session }) {
         element={
           session ? (
             <PageWrapper>
-              <DashboardLayout>
+              <DashboardLayout session={session}>
                 <Settings session={session} />
               </DashboardLayout>
             </PageWrapper>
@@ -183,16 +183,64 @@ function App() {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const startGuest = () => {
+    sessionStorage.setItem('af_guest_session', 'true')
+    setSession({
+      user: {
+        id: 'guest',
+        email: 'guest@example.com',
+        user_metadata: {
+          full_name: 'Guest'
+        }
+      },
+      isGuest: true
+    })
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s)
+      if (s) {
+        setSession(s)
+      } else {
+        const savedGuest = sessionStorage.getItem('af_guest_session')
+        if (savedGuest === 'true') {
+          setSession({
+            user: {
+              id: 'guest',
+              email: 'guest@example.com',
+              user_metadata: {
+                full_name: 'Guest'
+              }
+            },
+            isGuest: true
+          })
+        }
+      }
       setLoading(false)
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s)
+      if (s) {
+        setSession(s)
+      } else {
+        const savedGuest = sessionStorage.getItem('af_guest_session')
+        if (savedGuest === 'true') {
+          setSession({
+            user: {
+              id: 'guest',
+              email: 'guest@example.com',
+              user_metadata: {
+                full_name: 'Guest'
+              }
+            },
+            isGuest: true
+          })
+        } else {
+          setSession(null)
+        }
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -205,7 +253,7 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <AppRoutes session={session} />
+        <AppRoutes session={session} onStartGuest={startGuest} />
       </ThemeProvider>
     </BrowserRouter>
   )

@@ -5,7 +5,7 @@ import { LoginForm } from '../components/auth/LoginForm'
 import { SignupForm } from '../components/auth/SignupForm'
 import { Logo, Wordmark } from '../components/layout/Logo'
 
-export function AuthPage() {
+export function AuthPage({ onStartGuest }) {
   const [mode, setMode] = useState('login')
 
   return (
@@ -41,12 +41,14 @@ export function AuthPage() {
             transition={{ duration: 0.3 }}
           >
             {mode === 'login' ? (
-              <LoginForm onSwitchToSignup={() => setMode('signup')} />
+              <LoginForm onSwitchToSignup={() => setMode('signup')} onStartGuest={onStartGuest} />
             ) : (
-              <SignupForm onSwitchToLogin={() => setMode('login')} />
+              <SignupForm onSwitchToLogin={() => setMode('login')} onStartGuest={onStartGuest} />
             )}
           </motion.div>
         </AnimatePresence>
+
+
       </motion.div>
     </div>
   )

@@ -17,6 +17,8 @@ export function GoalCard({
   onAddLandmark,
   onToggleTask,
   onToggleLandmark,
+  onUpdateLandmark,
+  onDeleteLandmark,
   onDeleteGoal,
 }) {
   const [expanded, setExpanded] = useState(false)
@@ -190,6 +192,8 @@ export function GoalCard({
                 goalTasks={tasksForGoal}
                 onAddLandmark={onAddLandmark}
                 onToggleLandmark={onToggleLandmark}
+                onUpdateLandmark={onUpdateLandmark}
+                onDeleteLandmark={onDeleteLandmark}
               />
             </div>
           </motion.div>

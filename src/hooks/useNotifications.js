@@ -15,15 +15,23 @@ export function useNotifications(userId) {
       const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
       const today = now.toISOString().split('T')[0]
 
-      const { data: tasks } = await supabase
-        .from('daily_tasks')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('due_date', today)
-        .eq('is_done', false)
-        .not('reminder_time', 'is', null)
+      let tasks = []
+      if (userId === 'guest') {
+        const stored = sessionStorage.getItem('af_guest_tasks')
+        const allTasks = stored ? JSON.parse(stored) : []
+        tasks = allTasks.filter((t) => t.due_date === today && !t.is_done && t.reminder_time)
+      } else {
+        const { data } = await supabase
+          .from('daily_tasks')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('due_date', today)
+          .eq('is_done', false)
+          .not('reminder_time', 'is', null)
+        tasks = data || []
+      }
 
-      tasks?.forEach((task) => {
+      tasks.forEach((task) => {
         const reminderTime = task.reminder_time?.slice(0, 5)
         if (reminderTime !== currentTime) return
 

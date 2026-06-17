@@ -74,8 +74,8 @@ export function ThemeToggle({ compact = false, className }) {
       {/* Sun icon — left side */}
       <span
         className={cn(
-          'relative z-10 flex items-center justify-center w-7 h-7 transition-all duration-300',
-          isDark ? 'opacity-40 text-slate' : 'opacity-100 text-amber-400'
+          'absolute left-1 z-10 flex items-center justify-center w-7 h-7 transition-all duration-300 pointer-events-none',
+          isDark ? 'opacity-40 text-slate' : 'opacity-0'
         )}
       >
         <Sun className="w-3.5 h-3.5" />
@@ -84,8 +84,8 @@ export function ThemeToggle({ compact = false, className }) {
       {/* Moon icon — right side */}
       <span
         className={cn(
-          'relative z-10 flex items-center justify-center w-7 h-7 transition-all duration-300',
-          isDark ? 'opacity-100 text-royal-light' : 'opacity-40 text-slate'
+          'absolute right-1 z-10 flex items-center justify-center w-7 h-7 transition-all duration-300 pointer-events-none',
+          isDark ? 'opacity-0' : 'opacity-40 text-slate'
         )}
       >
         <Moon className="w-3.5 h-3.5" />
@@ -94,12 +94,12 @@ export function ThemeToggle({ compact = false, className }) {
       {/* Animated thumb */}
       <motion.span
         className={cn(
-          'absolute top-1 h-7 w-7 rounded-full shadow-md flex items-center justify-center',
+          'absolute top-1 left-1 h-7 w-7 rounded-full shadow-md flex items-center justify-center',
           isDark
             ? 'bg-[#1e3a6e] border border-royal/30'
             : 'bg-white border border-amber-200'
         )}
-        animate={{ x: isDark ? 37 : 0 }}
+        animate={{ x: isDark ? 36 : 0 }}
         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       >
         <motion.div

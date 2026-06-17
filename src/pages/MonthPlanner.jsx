@@ -76,6 +76,8 @@ export function MonthPlanner({ session }) {
     toggleGoalTask,
     addLandmark,
     toggleLandmark,
+    updateLandmark,
+    deleteLandmark,
   } = useGoals(session.user.id)
 
   const [showForm, setShowForm] = useState(false)
@@ -260,6 +262,8 @@ export function MonthPlanner({ session }) {
                 onAddLandmark={addLandmark}
                 onToggleTask={toggleGoalTask}
                 onToggleLandmark={toggleLandmark}
+                onUpdateLandmark={updateLandmark}
+                onDeleteLandmark={deleteLandmark}
                 onDeleteGoal={deleteGoal}
               />
             ))}

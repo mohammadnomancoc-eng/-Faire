@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { Bell, Moon, User, Shield } from 'lucide-react'
 import { GlassCard } from '../components/ui/GlassCard'
 import { Button } from '../components/ui/Button'
@@ -24,13 +25,40 @@ export function Settings({ session }) {
             <User className="w-7 h-7 text-royal-light" />
           </div>
           <div>
-            <h2 className="font-display text-lg font-semibold text-white">{name}</h2>
-            <p className="text-sm text-slate">{email}</p>
+            <h2 className="font-display text-lg font-semibold text-white">
+              {session?.isGuest ? 'Guest User' : name}
+            </h2>
+            <p className="text-sm text-slate">
+              {session?.isGuest ? 'Your data is only stored temporarily on this browser.' : email}
+            </p>
           </div>
         </div>
-        <Button variant="ghost" onClick={() => supabase.auth.signOut()}>
-          Sign out
-        </Button>
+        {session?.isGuest ? (
+          <div className="flex flex-wrap gap-3">
+            <Link to="/login">
+              <Button variant="primary">
+                Save Progress / Login
+              </Button>
+            </Link>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                sessionStorage.removeItem('af_guest_session')
+                sessionStorage.removeItem('af_guest_tasks')
+                sessionStorage.removeItem('af_guest_goals')
+                sessionStorage.removeItem('af_guest_landmarks')
+                sessionStorage.removeItem('af_guest_goal_tasks')
+                window.location.href = '/'
+              }}
+            >
+              Exit Guest
+            </Button>
+          </div>
+        ) : (
+          <Button variant="ghost" onClick={() => supabase.auth.signOut()}>
+            Sign out
+          </Button>
+        )}
       </GlassCard>
 
       <GlassCard className="p-6 space-y-5">

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { Button } from '../ui/Button'
 
-export function SignupForm({ onSwitchToLogin }) {
+export function SignupForm({ onSwitchToLogin, onStartGuest }) {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -153,6 +153,25 @@ export function SignupForm({ onSwitchToLogin }) {
       <Button type="submit" variant="primary" disabled={loading} className="w-full">
         {loading ? 'Creating account…' : 'Sign up'}
       </Button>
+
+      {/* Divider */}
+      <div className="relative flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-white/[0.08]" />
+        </div>
+        <span className="relative z-10 px-3 bg-[#0a162e] text-[11px] text-slate-500 uppercase tracking-wider font-semibold">
+          or
+        </span>
+      </div>
+
+      <button
+        type="button"
+        onClick={onStartGuest}
+        className="w-full py-3 px-4 rounded-xl border border-dashed border-white/20 hover:border-royal-light/40 bg-white/[0.02] hover:bg-royal/5 text-sm font-semibold text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
+      >
+        Continue without sign up
+      </button>
+
       <p className="text-sm text-center text-slate">
         Already have an account?{' '}
         <button

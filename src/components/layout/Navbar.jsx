@@ -101,7 +101,7 @@ export function Navbar({ session, variant = 'floating' }) {
 
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
-            {session ? (
+            {session && !session.isGuest ? (
               <Button
                 variant="ghost"
                 onClick={() => supabase.auth.signOut()}
@@ -109,6 +109,28 @@ export function Navbar({ session, variant = 'floating' }) {
               >
                 Sign out
               </Button>
+            ) : session?.isGuest ? (
+              <>
+                <Link to="/login">
+                  <Button variant="primary" className="text-sm shadow-glow">
+                    Save Progress / Login
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    sessionStorage.removeItem('af_guest_session')
+                    sessionStorage.removeItem('af_guest_tasks')
+                    sessionStorage.removeItem('af_guest_goals')
+                    sessionStorage.removeItem('af_guest_landmarks')
+                    sessionStorage.removeItem('af_guest_goal_tasks')
+                    window.location.href = '/'
+                  }}
+                  className="text-sm"
+                >
+                  Exit Guest
+                </Button>
+              </>
             ) : (
               <>
                 <Link to="/login">
@@ -151,7 +173,7 @@ export function Navbar({ session, variant = 'floating' }) {
                 </Link>
               ))}
               <div className="border-t border-white/[0.08] pt-3 mt-2">
-                {session ? (
+                {session && !session.isGuest ? (
                   <Button
                     variant="ghost"
                     className="w-full"
@@ -159,6 +181,28 @@ export function Navbar({ session, variant = 'floating' }) {
                   >
                     Sign out
                   </Button>
+                ) : session?.isGuest ? (
+                  <div className="flex flex-col gap-2">
+                    <Link to="/login" className="block w-full">
+                      <Button variant="primary" className="w-full">
+                        Save Progress / Login
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      className="w-full text-slate"
+                      onClick={() => {
+                        sessionStorage.removeItem('af_guest_session')
+                        sessionStorage.removeItem('af_guest_tasks')
+                        sessionStorage.removeItem('af_guest_goals')
+                        sessionStorage.removeItem('af_guest_landmarks')
+                        sessionStorage.removeItem('af_guest_goal_tasks')
+                        window.location.href = '/'
+                      }}
+                    >
+                      Exit Guest
+                    </Button>
+                  </div>
                 ) : (
                   <Link to="/login" className="block">
                     <Button variant="primary" className="w-full">

@@ -23,7 +23,7 @@ const navItems = [
   { label: 'Settings', path: '/settings', icon: Settings },
 ]
 
-export function Sidebar({ collapsed, onToggle }) {
+export function Sidebar({ session, collapsed, onToggle }) {
   const location = useLocation()
 
   const isActive = (item) => {
@@ -31,6 +31,19 @@ export function Sidebar({ collapsed, onToggle }) {
       return location.pathname === '/month' && location.hash === '#goals'
     }
     return location.pathname === item.path
+  }
+
+  const handleLogout = async () => {
+    if (session?.isGuest) {
+      sessionStorage.removeItem('af_guest_session')
+      sessionStorage.removeItem('af_guest_tasks')
+      sessionStorage.removeItem('af_guest_goals')
+      sessionStorage.removeItem('af_guest_landmarks')
+      sessionStorage.removeItem('af_guest_goal_tasks')
+      window.location.href = '/'
+    } else {
+      await supabase.auth.signOut()
+    }
   }
 
   return (
@@ -95,17 +108,17 @@ export function Sidebar({ collapsed, onToggle }) {
         <button
           id="sidebar-logout"
           type="button"
-          onClick={() => supabase.auth.signOut()}
+          onClick={handleLogout}
           className={cn(
             'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 group',
             'text-slate hover:text-danger hover:bg-danger/10',
             collapsed && 'justify-center px-2'
           )}
-          title={collapsed ? 'Sign out' : undefined}
+          title={collapsed ? (session?.isGuest ? 'Exit Guest' : 'Sign out') : undefined}
         >
           <LogOut className="w-5 h-5 shrink-0 transition-colors group-hover:text-danger" />
           {!collapsed && (
-            <span className="text-sm font-medium">Sign out</span>
+            <span className="text-sm font-medium">{session?.isGuest ? 'Exit Guest' : 'Sign out'}</span>
           )}
         </button>
       </div>
@@ -134,7 +147,7 @@ export function Sidebar({ collapsed, onToggle }) {
   )
 }
 
-export function MobileNav() {
+export function MobileNav({ session }) {
   const location = useLocation()
 
   const mobileItems = [
@@ -143,6 +156,19 @@ export function MobileNav() {
     { label: 'Month', path: '/month', icon: CalendarRange },
     { label: 'Settings', path: '/settings', icon: Settings },
   ]
+
+  const handleLogout = async () => {
+    if (session?.isGuest) {
+      sessionStorage.removeItem('af_guest_session')
+      sessionStorage.removeItem('af_guest_tasks')
+      sessionStorage.removeItem('af_guest_goals')
+      sessionStorage.removeItem('af_guest_landmarks')
+      sessionStorage.removeItem('af_guest_goal_tasks')
+      window.location.href = '/'
+    } else {
+      await supabase.auth.signOut()
+    }
+  }
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-white/[0.08] px-2 pb-3 pt-1">
@@ -175,11 +201,11 @@ export function MobileNav() {
         <button
           id="mobile-logout"
           type="button"
-          onClick={() => supabase.auth.signOut()}
+          onClick={handleLogout}
           className="flex flex-col items-center gap-1 px-4 py-2 rounded-xl text-slate hover:text-danger transition-all duration-300"
         >
           <LogOut className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Logout</span>
+          <span className="text-[10px] font-medium">{session?.isGuest ? 'Exit Guest' : 'Logout'}</span>
         </button>
       </div>
     </nav>
