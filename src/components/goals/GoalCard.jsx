@@ -1,13 +1,40 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Trash2, Target, Clock, CheckCircle2, ListTodo } from 'lucide-react'
+import { ChevronDown, Trash2, Target, Clock, CheckCircle2, ListTodo, AlertTriangle } from 'lucide-react'
 import { GoalTaskList } from './GoalTaskList'
 import { LandmarkList } from './LandmarkList'
 import { ProgressCircle } from '../shared/ProgressCircle'
 import { GlassCard } from '../ui/GlassCard'
-import { Button } from '../ui/Button'
 import { cn } from '../../lib/cn'
+
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
+      <div className="relative glass rounded-2xl p-6 max-w-sm w-full border border-red-400/20 shadow-lift">
+        <div className="flex items-start gap-3 mb-5">
+          <div className="w-9 h-9 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-4 h-4 text-red-400" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-white mb-1">Confirm deletion</p>
+            <p className="text-xs text-slate leading-relaxed">{message}</p>
+          </div>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <button onClick={onCancel} className="px-4 py-2 rounded-xl text-sm text-slate hover:text-white hover:bg-white/[0.06] transition-all duration-200">Cancel</button>
+          <button onClick={onConfirm} className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-red-500/80 hover:bg-red-500 border border-red-400/30 transition-all duration-200">Delete</button>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
 export function GoalCard({
   goal,
@@ -20,8 +47,10 @@ export function GoalCard({
   onUpdateLandmark,
   onDeleteLandmark,
   onDeleteGoal,
+  onDeleteTask,
 }) {
   const [expanded, setExpanded] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   const tasksForGoal = goalTasks.filter((t) => t.goal_id === goal.id)
   const doneTasks = tasksForGoal.filter((t) => t.is_done)
@@ -40,7 +69,15 @@ export function GoalCard({
   const isComplete = goalProgress === 100
 
   return (
-    <GlassCard hover className="overflow-hidden p-0">
+    <>
+      {confirmDelete && (
+        <ConfirmDialog
+          message={`"${goal.title}" and all its tasks and milestones will be permanently deleted.`}
+          onConfirm={() => { setConfirmDelete(false); onDeleteGoal(goal.id) }}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
+      <GlassCard hover className="overflow-hidden p-0">
       {/* Header section with gradient accent */}
       <div className="relative p-6 pb-5">
         {/* Subtle accent glow at top */}
@@ -102,7 +139,7 @@ export function GoalCard({
                 {onDeleteGoal && (
                   <button
                     type="button"
-                    onClick={() => onDeleteGoal(goal.id)}
+                  onClick={() => setConfirmDelete(true)}
                     className="p-2 rounded-xl text-slate hover:text-red-400 hover:bg-red-400/10 transition-all duration-200"
                     aria-label="Delete goal"
                   >
@@ -185,6 +222,7 @@ export function GoalCard({
                 tasks={tasksForGoal}
                 onAddTask={onAddTask}
                 onToggleTask={onToggleTask}
+                onDeleteTask={onDeleteTask}
               />
               <LandmarkList
                 goal={goal}
@@ -199,6 +237,7 @@ export function GoalCard({
           </motion.div>
         )}
       </AnimatePresence>
-    </GlassCard>
+      </GlassCard>
+    </>
   )
 }

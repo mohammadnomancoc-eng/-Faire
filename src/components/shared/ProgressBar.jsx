@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { cn } from '../../lib/cn'
 
 export function ProgressBar({ percentage, className, showLabel = true }) {
   const { ref, inView } = useInView({ triggerOnce: true })
-  const [displayPct, setDisplayPct] = useState(0)
-
-  useEffect(() => {
-    if (inView) setDisplayPct(percentage)
-  }, [inView, percentage])
 
   return (
     <div ref={ref} className={cn('w-full', className)}>
@@ -35,7 +29,7 @@ export function ProgressBar({ percentage, className, showLabel = true }) {
       </div>
       {showLabel && (
         <p className="text-center mt-2 text-sm font-semibold text-royal-light">
-          {inView ? `${displayPct}%` : '0%'}
+          {inView ? `${percentage}%` : '0%'}
         </p>
       )}
     </div>

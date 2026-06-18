@@ -31,7 +31,9 @@ export function useDailyTasks(userId, dueDate) {
   }, [userId, dueDate])
 
   useEffect(() => {
-    fetchTasks()
+    Promise.resolve().then(() => {
+      fetchTasks()
+    })
   }, [fetchTasks])
 
   useEffect(() => {

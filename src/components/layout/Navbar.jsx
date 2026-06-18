@@ -44,8 +44,10 @@ export function Navbar({ session, variant = 'floating' }) {
   }, [])
 
   useEffect(() => {
-    setMobileOpen(false)
-  }, [location.pathname])
+    if (mobileOpen) {
+      Promise.resolve().then(() => setMobileOpen(false))
+    }
+  }, [location.pathname, mobileOpen])
 
   if (variant === 'minimal') return null
 

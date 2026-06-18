@@ -19,13 +19,22 @@ export function ProgressDisplay({ percentage, viewMode, setViewMode, label, comp
 
   useEffect(() => {
     let timer
-    if (percentage === 100) {
-      setShowCelebration(true)
-      timer = window.setTimeout(() => setShowCelebration(false), 5000)
-    } else {
-      setShowCelebration(false)
+    let active = true
+    Promise.resolve().then(() => {
+      if (!active) return
+      if (percentage === 100) {
+        setShowCelebration(true)
+        timer = window.setTimeout(() => {
+          if (active) setShowCelebration(false)
+        }, 5000)
+      } else {
+        setShowCelebration(false)
+      }
+    })
+    return () => {
+      active = false
+      window.clearTimeout(timer)
     }
-    return () => window.clearTimeout(timer)
   }, [percentage])
 
     return (

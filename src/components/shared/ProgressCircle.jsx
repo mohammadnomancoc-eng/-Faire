@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { cn } from '../../lib/cn'
@@ -10,11 +9,6 @@ export function ProgressCircle({ percentage, size = 160, strokeWidth = 10 }) {
   const center = size / 2
 
   const { ref, inView } = useInView({ triggerOnce: true })
-  const [displayPct, setDisplayPct] = useState(0)
-
-  useEffect(() => {
-    if (inView) setDisplayPct(percentage)
-  }, [inView, percentage])
 
   return (
     <div ref={ref} className="relative inline-flex">
@@ -58,7 +52,7 @@ export function ProgressCircle({ percentage, size = 160, strokeWidth = 10 }) {
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="font-display text-2xl font-bold text-white">
-          {inView ? `${displayPct}%` : '0%'}
+          {inView ? `${percentage}%` : '0%'}
         </span>
       </div>
     </div>
@@ -67,11 +61,6 @@ export function ProgressCircle({ percentage, size = 160, strokeWidth = 10 }) {
 
 export function ProgressBar({ percentage, className, showLabel = true }) {
   const { ref, inView } = useInView({ triggerOnce: true })
-  const [displayPct, setDisplayPct] = useState(0)
-
-  useEffect(() => {
-    if (inView) setDisplayPct(percentage)
-  }, [inView, percentage])
 
   return (
     <div ref={ref} className={cn('w-full', className)}>
@@ -97,7 +86,7 @@ export function ProgressBar({ percentage, className, showLabel = true }) {
       </div>
       {showLabel && (
         <p className="text-center mt-2 text-sm font-semibold text-royal-light">
-          {inView ? `${displayPct}%` : '0%'}
+          {inView ? `${percentage}%` : '0%'}
         </p>
       )}
     </div>

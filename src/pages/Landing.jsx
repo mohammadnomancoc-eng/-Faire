@@ -8,8 +8,6 @@ import {
 } from 'lucide-react'
 
 import { Logo } from '../components/layout/Logo'
-import { Button } from '../components/ui/Button'
-import { GlassCard } from '../components/ui/GlassCard'
 
 /* ─── Animated orb background ─────────────────────────────────── */
 function HeroBG() {

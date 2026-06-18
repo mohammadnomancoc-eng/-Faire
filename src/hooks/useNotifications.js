@@ -15,7 +15,7 @@ export function useNotifications(userId) {
       const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
       const today = now.toISOString().split('T')[0]
 
-      let tasks = []
+      let tasks
       if (userId === 'guest') {
         const stored = sessionStorage.getItem('af_guest_tasks')
         const allTasks = stored ? JSON.parse(stored) : []

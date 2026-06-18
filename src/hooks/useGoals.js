@@ -40,7 +40,9 @@ export function useGoals(userId) {
   }, [userId])
 
   useEffect(() => {
-    fetchAll()
+    Promise.resolve().then(() => {
+      fetchAll()
+    })
   }, [fetchAll])
 
   useEffect(() => {
@@ -374,6 +376,38 @@ export function useGoals(userId) {
     setLandmarks((prev) => prev.filter((l) => l.id !== landmarkId))
   }
 
+  const deleteGoalTask = async (taskId) => {
+    if (userId === 'guest') {
+      const storedTasks = sessionStorage.getItem('af_guest_goal_tasks')
+      const allTasks = storedTasks ? JSON.parse(storedTasks) : []
+      const updatedTasks = allTasks.filter(t => t.id !== taskId)
+      sessionStorage.setItem('af_guest_goal_tasks', JSON.stringify(updatedTasks))
+
+      // Also clean up daily tasks that are linked to this goal task!
+      const storedDaily = sessionStorage.getItem('af_guest_tasks')
+      const allDaily = storedDaily ? JSON.parse(storedDaily) : []
+      const updatedDaily = allDaily.filter(t => t.goal_task_id !== taskId)
+      sessionStorage.setItem('af_guest_tasks', JSON.stringify(updatedDaily))
+
+      setGoalTasks((prev) => prev.filter((t) => t.id !== taskId))
+      window.dispatchEvent(new Event('af_guest_data_changed'))
+      return
+    }
+
+    const { error } = await supabase.from('goal_tasks').delete().eq('id', taskId)
+    if (error) {
+      alert(error.message)
+      return
+    }
+    // Also delete linked daily tasks
+    const { error: dailyError } = await supabase.from('daily_tasks').delete().eq('goal_task_id', taskId)
+    if (dailyError) {
+      console.error('Failed to delete daily task sync:', dailyError)
+    }
+
+    setGoalTasks((prev) => prev.filter((t) => t.id !== taskId))
+  }
+
   const getGoalProgress = (goalId) => {
     const tasks = goalTasks.filter((t) => t.goal_id === goalId)
     const done = tasks.filter((t) => t.is_done)
@@ -395,6 +429,7 @@ export function useGoals(userId) {
     deleteGoal,
     addGoalTask,
     toggleGoalTask,
+    deleteGoalTask,
     addLandmark,
     toggleLandmark,
     updateLandmark,
