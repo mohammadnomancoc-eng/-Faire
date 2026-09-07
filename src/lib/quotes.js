@@ -35,3 +35,21 @@ export const quotes = [
   "Either you run the day, or the day runs you. — Jim Rohn",
   "A goal without a plan is just a wish. — Antoine de Saint-Exupéry",
 ]
+
+/**
+ * Returns a random quote from the collection
+ * @returns {string}
+ */
+export function getRandomQuote() {
+  const index = Math.floor(Math.random() * quotes.length)
+  return quotes[index]
+}
+
+/**
+ * Returns a deterministic quote for the current day
+ * @returns {string}
+ */
+export function getQuoteOfTheDay() {
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24))
+  return quotes[dayOfYear % quotes.length]
+}
